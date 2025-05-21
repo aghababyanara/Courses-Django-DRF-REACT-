@@ -76,7 +76,6 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
-        # Обновление пароля отдельно
         password = validated_data.pop('password', None)
         if password:
             instance.set_password(password)
@@ -101,3 +100,15 @@ class PublicUserSerializer(UserSerializer):
             'social_links',
             'created_at'
         ]
+
+
+class PasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(
+        required=True,
+        min_length=8,
+        max_length=128,
+        write_only=True
+    )
+
+    def validate_new_password(self, value):
+        return value
